@@ -1,0 +1,212 @@
+#!/bin/bash
+#Aakash oli
+#18030825
+#Here we have to put two parameters or the program will exit
+if [[ $# != 2 ]]
+then
+echo "Please enter First name and  id"
+exit
+#with this command the program give eror if first parameter has number and second parameter has alphabetical.
+elif [[ $1 =~ ^[0-9]+$ && $2 =~ ^[A-Za-z]+$ ]]
+then
+        echo "Please enter your first name and ID"
+        exit
+#the program will only run if firstparameter doest start with number and second paramerter with alphabetical
+elif ! [[  $1 =~ ^[0-9]+$ && $2 =~ ^[A-Za-z]+$ ]]
+then
+#First function for login
+login(){
+#the secret key is login
+Secret_key=aakash
+echo " Enter the Secret Key"
+#here it take input from user
+read skey
+#mistake counts how many times user mistake the password
+mistake=1
+#using untill loop for password
+#here if the user inputs 5 time mistake secret key then the program ends
+until [[ $Secret_key = $skey  ]]
+do
+        if [ $mistake -gt 4 ]
+        then
+        echo " You tried more than 5 times the program will end now"
+        exit
+        fi
+        echo "Please try again with the secret key"
+        read  skey
+        mistake=$(( $mistake + 1))
+done
+}
+login
+#login function ends here
+#after the secret key is same there its progress
+                echo "|-------------------------------------------------------------------|"
+                echo "|Welcome to this program your first name is $1                      |"
+                echo "|and your id is $2                                                  |"
+                echo "|you have excutated the program in $(date)|                          "
+                echo "|-------------------------------------------------------------------|"
+
+#second function for the country code
+Bestteam(){
+#here using NEP as the best team
+Bestteams=NEP
+        echo "-----------------------------"
+        echo  "|Country     | Country Code|"
+        echo "-----------------------------"
+        echo "| Australia   |  AUS         |"
+        echo "| Bangladesh  |  BAN         |"
+        echo "| England     |  ENG         |"
+        echo "| India       |  IND         |"
+        echo "| Nepal       |  NEP         |"
+        echo "-----------------------------"
+        echo  "Please Guess the best team:"
+#taking input for a best team
+        read  teambest
+#untill the NEP doesnt match with the input given by user the program will ask the best team
+        until [[ "$teambest" = "$Bestteams" ]]
+                do
+#if any of the AUS BAN ENG or IND come as a input then by the case command we can give the following error.
+        case "$teambest" in
+                AUS|BAN|ENG|IND)
+                echo "Your guess was not correct. Please Try with the diffrent country code :"
+                read teambest
+#it again takes input
+                ;;
+        *)
+#if the user input the code  that is not present in the table the following code is giving 
+  echo " enter the correct country code "
+                read teambest
+#again the input is takinf from user.
+        esac
+        done
+#if the user give NEP
+                echo "Your guess is absoulelty right."
+                echo "|------------------------------------------------|"
+                echo "|Nepal is the best team in the history of cricket|"
+                echo "|Former captian of Nepal Cricket is Paras khadka.|"
+                echo "|Captian of Nepal cricket is Gyanendra malla.    |"
+                echo "|------------------------------------------------|"
+
+}
+#here the function for the country ends
+Bestteam
+#here the function for the player starts.
+Bestplayer(){
+        echo "-----------------------------"
+        echo "Player          |Code"
+        echo "-----------------------------"
+        echo "|Paras Khadka   |PK "
+        echo "|David Warner   |DW "
+        echo "|Ross Taylor    |RT "
+        echo "|Virat Kholi    |VK "
+        echo "|Ben Stokes     |BS "
+        echo "-----------------------------"
+        echo "-----------------------------"
+        echo "Enter Code of any three players:"
+        read Pl1 Pl2 Pl3
+        best_players=($Pl1 $Pl2 $Pl3)
+        best_players=($Pl1 $Pl2 $Pl3)
+#if user inputs the code more than 3 then the program gives error and the country function is called        
+	if [[ ${#best_players[@]} -gt 3 ]]
+        then
+                echo "please put the code of only 3 players"
+#calling the function of team and player
+                Bestteam
+                Bestplayer
+#if the follwing code meets then only the programs goes
+        elif [[ $Pl1 =~ ^(PK|VK|DW|BS|RT)$ && $Pl2 =~ ^(PK|VK|DW|BS|RT)$ && $Pl3 =~ ^(PK|VK|DW|BS|RT) ]]
+        then
+#if first and second codes is same then
+        case $Pl1 in
+        $Pl2)
+                echo "Your player code is same as second please try with the given codes"
+                Bestteam
+                Bestplayer
+                ;;
+#if first and third code is same
+        $Pl3)
+                echo " You have given the code same as the third code . Please try with three diffrent code"
+                Bestteam
+                Bestplayer
+                ;;
+                PK|VK|DW|BS|RT)
+                ;;
+        esac
+#if second and third code is same
+        case "$Pl2" in
+        "$pl3")
+                echo "Your second code is same as third code . please do try again"
+                Bestteam
+                Bestplayer
+                ;;
+        PK|VK|DW|BS|RT)
+                ;;
+        esac
+#after the requiremets then the number option is given
+#after using select command we can choose PS3 which gives nice GUI 
+               PS3="choose number of the player "
+#using select command
+        select  best_players in $Pl1 $Pl2 $Pl3
+        do
+#if the number is not in best player then it will give this command
+        if [ -z "$best_players" ]
+        then
+        echo " In-correct option"
+#then the whole process starts
+	Bestteam
+        Bestplayer
+#if the code is right and it reads then the file will open
+        elif [ -r $best_players ]
+        then
+	echo "---------------------------------------"
+        cat $best_players
+	echo "---------------------------------------"
+        break
+#if the upper case fails then to handle the given error will be shown and the team will start.
+        else
+        echo " The given number player doesnt have any file. "
+        Bestteam
+        Bestplayer
+        fi
+        done
+        else
+#if user doesnt give from the upper command or give less or more than this will be shown
+        echo " Please select only 3 players"
+        Bestteam
+        Bestplayer
+        fi
+        }
+        Bestplayer
+        fi
+#the last function is redo
+#this will apear at last
+#this ask if the user want to restart the program 
+        redo(){
+        echo " Do you  want to continue ?"
+        echo "If yes then press Y "
+        echo "If No then press N"
+        read option
+#this reads the user input
+#if the user if Y or y then the whole process will start
+        if [[ $option == y || $option == Y ]]
+        then
+        Bestteam
+        Bestplayer
+        redo
+#if the user give N or n then the program will end with the thank you note
+        elif [[ $option == n || $option == N ]]
+        then
+                echo " Thank you for using our program "
+                exit
+#if the user give any other than Y, y, N or n then the redo will start again        
+	else
+        echo " Please TYPE Y OR N "
+        redo
+                fi
+        }
+        redo
+#if the user give any other option then this wil apear 
+else
+echo "Enter the correct given Firstname and ID "
+fi
+
